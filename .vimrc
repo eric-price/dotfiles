@@ -1,19 +1,21 @@
 call plug#begin('~/.vim/plugged')
-Plug 'mileszs/ack.vim'
-Plug 'w0rp/ale'
-Plug 'scrooloose/nerdtree'
-Plug 'kien/ctrlp.vim'
-Plug 'raimondi/delimitmate'
-Plug 'tomasr/molokai'
-Plug 'saltstack/salt-vim'
-Plug 'godlygeek/tabular'
-Plug 'tomtom/tcomment_vim'
-Plug 'vim-airline/vim-airline'
-Plug 'tpope/vim-fugitive'
 Plug 'airblade/vim-gitgutter'
-Plug 'sheerun/vim-polyglot'
+Plug 'ctrlpvim/ctrlp.vim'
+Plug 'godlygeek/tabular'
+Plug 'itchyny/lightline.vim'
 Plug 'mhinz/vim-startify'
+Plug 'mileszs/ack.vim'
+Plug 'ntpeters/vim-better-whitespace'
+Plug 'raimondi/delimitmate' " provides automatic closing of quotes, parenthesis, brackets
+Plug 'saltstack/salt-vim'
+Plug 'scrooloose/nerdtree'
+Plug 'sheerun/vim-polyglot' " syntax and indentation support
+Plug 'tomtom/tcomment_vim'
+Plug 'tpope/vim-fugitive' " git intergration
 Plug 'tpope/vim-surround'
+Plug 'easymotion/vim-easymotion'
+Plug 'w0rp/ale'
+Plug 'morhetz/gruvbox'
 call plug#end()
 
 syntax enable
@@ -26,9 +28,9 @@ set copyindent " copy the previous indentation on autoindenting
 set expandtab " tabs are spaces
 set ignorecase " ignore case when searching
 set incsearch " search as characters are entered
+set hlsearch " highlight search pattern
 set laststatus=2 " always display status line
 set mouse=a " enable mouse support
-set nocompatible " remove vi compatibility
 set noerrorbells
 set noshowmode " Don't show the current mode (airline.vim takes care of us)
 set nostartofline " stop certain movements from always going to the first character of a line
@@ -38,7 +40,6 @@ set shiftwidth=2 " normal mode indentation commands use 2 spaces
 set showcmd " show command in bottom bar
 set showmatch " highlight matching [{()}]
 set smartcase " search case sensitive when uppercase is used
-set smartindent
 set smarttab " insert tabs on the start of a line according to shiftwidth, not tabstop
 set softtabstop=2 " number of spaces in tab when editing
 set tabstop=2 " number of visual spaces per TAB
@@ -52,8 +53,8 @@ set complete-=i " word completion (options .,w,b,u,t,i) in insert mode (ctrl-p)
 set lazyredraw " don’t update screen during macro and script execution
 set backupdir=~/.vim/tmp/ " backup files
 set directory=~/.vim/tmp/ " swap files
-set relativenumber " show relative line numbers
 set shiftround " when shifting lines, round the indentation to the nearest multiple of shiftwidth.
+set hidden
 
 " show line break character
 set breakindent
@@ -63,44 +64,44 @@ set showbreak=↪>\
 if has('unix')
   if has('mac')
     set clipboard=unnamed " copy/paste to system clipboard
-    set rtp+=/usr/local/opt/fzf " enable fzf support
   else
     set clipboard=unnamedplus " copy/paste to system clipboard
-    set rtp+=~/.fzf " enable fzf support
   endif
 endif
 
 " ===== Display ======
 
-if (has("termguicolors"))
- set termguicolors
-endif
 set background=dark
 "set t_Co=256  " 256 colours in terminal.
-let g:airline_theme='molokai'
-colorscheme molokai
-set term=xterm-256color
+"set term=xterm-256color
+"set term=screen-256color
+colorscheme gruvbox
+let g:gruvbox_contrast_dark = 'hard'
+if &term =~# '^screen'
+  let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
+  let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
+endif
+if (has("termguicolors"))
+  set termguicolors
+endif
 
 " ===== Shortcuts =====
 
 let mapleader = "\<Space>"  " leader is space key
-map <silent> <C-n> :NERDTreeFocus<CR>
+nnoremap <silent> <C-n> :NERDTreeFocus<CR>
+
+set pastetoggle=<F2>
+nnoremap <Leader>q :set number!<CR>
+
 " Map tab to % - moves to nearest bracket match
 nnoremap <tab> %
 vnoremap <tab> %
 
-let g:ackprg = 'rg --vimgrep --no-heading' " Use ack.vim to search via rg
+let g:ackprg = 'rg --vimgrep --no-heading' " Use ripgrep when searching via ack.vim
 nnoremap <Leader>a :Ack!<space>
 
-nnoremap <Leader>1 i{{ salt['ktpillar.get']('') }}<ESC>4hi
-
 " split pane vertically
-nnoremap <Leader>w <C-w>v<C-w>l
-
-nnoremap <Leader>f :Vexplore<CR>
-
-" Switch between the last two files
-nnoremap <Leader><Leader> <c-^>
+nnoremap <Leader>d <C-w>v<C-w>l
 
 " move focus on window panes
 nnoremap <Leader>l <C-w>l
@@ -118,7 +119,17 @@ noremap <Right> <NOP>
 vnoremap J :m '>+1<CR>gv=gv
 vnoremap K :m '<-2<CR>gv=gv
 
-nmap ; :buffers<CR>:buffer<Space>
+" Clear search highlight
+nnoremap <silent><esc><esc> :nohlsearch<CR>
+
+" Buffers
+nnoremap <Leader>b :buffers<CR>:buffer<Space>
+nnoremap <Leader>n :bnext<CR>
+nnoremap <Leader>p :bprev<CR>
+
+" EasyMotion
+map  <Leader>f <Plug>(easymotion-bd-f)
+map  <Leader>w <Plug>(easymotion-bd-w)
 
 " Use ripgrep when using Ctrl-P
 if executable('rg')
@@ -126,3 +137,12 @@ if executable('rg')
   let g:ctrlp_user_command = 'rg %s --files --color=never --glob ""'
   let g:ctrlp_use_caching = 0
 endif
+
+let g:lightline = {
+      \ 'colorscheme': 'gruvbox',
+      \ 'active': {
+      \   'left': [ [ 'mode', 'paste' ],
+      \             [ 'gitbranch', 'readonly', 'filename', 'modified' ] ]
+      \ },
+      \ 'component_function': {'gitbranch': 'fugitive#head'},
+      \ }
