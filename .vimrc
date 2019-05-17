@@ -1,7 +1,7 @@
 call plug#begin('~/.vim/plugged')
 Plug 'mhinz/vim-signify' " git changes
 Plug 'ctrlpvim/ctrlp.vim'
-Plug 'godlygeek/tabular'
+"Plug 'godlygeek/tabular'
 Plug 'itchyny/lightline.vim'
 Plug 'mhinz/vim-startify'
 Plug 'mileszs/ack.vim'
@@ -9,14 +9,14 @@ Plug 'ntpeters/vim-better-whitespace'
 "Plug 'raimondi/delimitmate' " provides automatic closing of quotes, parenthesis, brackets
 Plug 'saltstack/salt-vim'
 Plug 'sheerun/vim-polyglot' " syntax and indentation support
-Plug 'tomtom/tcomment_vim'
+Plug 'tomtom/tcomment_vim' " provides easy to use, file-type sensible comments
 Plug 'tpope/vim-fugitive' " git intergration
-Plug 'tpope/vim-surround'
+Plug 'tpope/vim-surround' " mappings to easily delete, change and add such surroundings in pairs
 Plug 'easymotion/vim-easymotion'
 Plug 'w0rp/ale'
-Plug 'morhetz/gruvbox'
 Plug 'tpope/vim-vinegar'
 Plug 'scrooloose/nerdtree'
+Plug 'mhartington/oceanic-next'
 call plug#end()
 
 syntax enable
@@ -61,6 +61,7 @@ set backupdir=~/.vim/tmp/ " backup files
 set directory=~/.vim/tmp/ " swap files
 set shiftround " when shifting lines, round the indentation to the nearest multiple of shiftwidth.
 set hidden
+set nosmartindent
 
 " show line break character
 set breakindent
@@ -68,28 +69,23 @@ set breakindentopt=sbr
 set showbreak=..
 
 if has('unix')
-  if has('mac')
-    set clipboard=unnamed " copy/paste to system clipboard
-  else
-    set clipboard=unnamedplus " copy/paste to system clipboard
-  endif
+    if has('mac')
+        set clipboard=unnamed " copy/paste to system clipboard
+    else
+        set clipboard=unnamedplus " copy/paste to system clipboard
+    endif
 endif
 
 " ===== Display ======
 
-set background=dark
-"set t_Co=256  " 256 colours in terminal.
-"set term=xterm-256color
-"set term=screen-256color
-silent! colorscheme gruvbox
-let g:gruvbox_contrast_dark = 'hard'
+silent! colorscheme OceanicNext
+if (has("termguicolors"))
+    set termguicolors
+endif
 " Fix vim colorscheme in tmux
 if &term =~# '^screen'
-  let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
-  let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
-endif
-if (has("termguicolors"))
-  set termguicolors
+    let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
+    let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
 endif
 
 " ===== Shortcuts =====
@@ -131,15 +127,6 @@ nnoremap <Leader>b :buffers<CR>:buffer<Space>
 nnoremap <Leader>n :bnext<CR>
 nnoremap <Leader>p :bprev<CR>
 
-" EasyMotion
-map <Leader>f <Plug>(easymotion-bd-f)
-map <Leader>w <Plug>(easymotion-bd-w)
-
-" Netrw
-"map <Leader>e :Explore<CR>
-"map <Leader>s :Sexplore<CR>
-"map <Leader>v :Vexplore<CR>
-
 " Use ripgrep when using Ctrl-P
 if executable('rg')
   set grepprg=rg\ --color=never
@@ -148,7 +135,7 @@ if executable('rg')
 endif
 
 let g:lightline = {
-      \ 'colorscheme': 'gruvbox',
+      \ 'colorscheme': 'oceanicnext',
       \ 'active': {
       \   'left': [ [ 'mode', 'paste' ],
       \             [ 'gitbranch', 'readonly', 'filename', 'modified' ] ]
