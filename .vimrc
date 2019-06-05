@@ -96,6 +96,8 @@ map <C-n> :NERDTreeToggle<CR>
 set pastetoggle=<F2>
 nnoremap <Leader>q :set number!<CR>
 
+noremap <leader>w :w<cr>
+
 " Map tab to % - moves to nearest bracket match
 nnoremap <tab> %
 vnoremap <tab> %
