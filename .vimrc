@@ -1,13 +1,8 @@
 call plug#begin('~/.vim/plugged')
 Plug 'mhinz/vim-signify' " git changes
 Plug 'ctrlpvim/ctrlp.vim'
-"Plug 'godlygeek/tabular'
-Plug 'itchyny/lightline.vim'
-Plug 'mhinz/vim-startify'
 Plug 'mileszs/ack.vim'
-Plug 'ntpeters/vim-better-whitespace'
-"Plug 'raimondi/delimitmate' " provides automatic closing of quotes, parenthesis, brackets
-Plug 'saltstack/salt-vim'
+Plug 'ntpeters/vim-better-whitespace' " show trailing whitespace
 Plug 'sheerun/vim-polyglot' " syntax and indentation support
 Plug 'tomtom/tcomment_vim' " provides easy to use, file-type sensible comments
 Plug 'tpope/vim-fugitive' " git intergration
@@ -17,6 +12,11 @@ Plug 'w0rp/ale'
 Plug 'tpope/vim-vinegar'
 Plug 'scrooloose/nerdtree'
 Plug 'mhartington/oceanic-next'
+"Plug 'rakr/vim-two-firewatch'
+Plug 'hashivim/vim-terraform'
+Plug 'svermeulen/vim-cutlass' " prevent copy on delete
+Plug 'vim-airline/vim-airline'
+Plug 'jiangmiao/auto-pairs'
 call plug#end()
 
 syntax enable
@@ -51,11 +51,6 @@ set softtabstop=4 " number of spaces in tab when editing
 set tabstop=4 " number of visual spaces per TAB
 set title " Show the filename in the window titlebar
 set visualbell " Use visual bell instead of audible bell
-set wildchar=<TAB> " Character for CLI expansion (TAB-completion)
-set wildignore+=.DS_Store,*/.git/*,.swp
-set wildmenu " visual autocomplete for command menu
-set wildmode=longest,list,full
-set complete-=i " word completion (options .,w,b,u,t,i) in insert mode (ctrl-p)
 set lazyredraw " don’t update screen during macro and script execution
 set backupdir=~/.vim/tmp/ " backup files
 set directory=~/.vim/tmp/ " swap files
@@ -78,15 +73,11 @@ endif
 
 " ===== Display ======
 
-silent! colorscheme OceanicNext
 if (has("termguicolors"))
     set termguicolors
 endif
-" Fix vim colorscheme in tmux
-if &term =~# '^screen'
-    let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
-    let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
-endif
+silent! colorscheme OceanicNext
+let g:airline_theme='oceanicnext'
 
 " ===== Shortcuts =====
 
@@ -94,9 +85,9 @@ let mapleader = "\<Space>"  " leader is space key
 map <C-n> :NERDTreeToggle<CR>
 
 set pastetoggle=<F2>
-nnoremap <Leader>q :set number!<CR>
-
-noremap <leader>w :w<cr>
+nnoremap <Leader>q :q<CR>
+nnoremap <leader>w :w<CR>
+nnoremap <leader>Q :wqa<CR>
 
 " Map tab to % - moves to nearest bracket match
 nnoremap <tab> %
@@ -136,11 +127,3 @@ if executable('rg')
   let g:ctrlp_use_caching = 0
 endif
 
-let g:lightline = {
-      \ 'colorscheme': 'oceanicnext',
-      \ 'active': {
-      \   'left': [ [ 'mode', 'paste' ],
-      \             [ 'gitbranch', 'readonly', 'filename', 'modified' ] ]
-      \ },
-      \ 'component_function': {'gitbranch': 'fugitive#head'},
-      \ }
