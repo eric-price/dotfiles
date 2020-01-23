@@ -11,8 +11,9 @@ Plug 'easymotion/vim-easymotion'
 Plug 'w0rp/ale'
 Plug 'tpope/vim-vinegar'
 Plug 'scrooloose/nerdtree'
-Plug 'mhartington/oceanic-next'
+"Plug 'mhartington/oceanic-next'
 "Plug 'rakr/vim-two-firewatch'
+Plug 'jacoborus/tender.vim'
 Plug 'hashivim/vim-terraform'
 Plug 'svermeulen/vim-cutlass' " prevent copy on delete
 Plug 'vim-airline/vim-airline'
@@ -76,8 +77,8 @@ endif
 if (has("termguicolors"))
     set termguicolors
 endif
-silent! colorscheme OceanicNext
-let g:airline_theme='oceanicnext'
+silent! colorscheme tender
+let g:airline_theme='tender'
 
 " ===== Shortcuts =====
 
