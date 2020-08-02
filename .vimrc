@@ -16,8 +16,9 @@ Plug 'scrooloose/nerdtree'
 Plug 'jacoborus/tender.vim'
 Plug 'hashivim/vim-terraform'
 Plug 'svermeulen/vim-cutlass' " prevent copy on delete
-Plug 'vim-airline/vim-airline'
-Plug 'jiangmiao/auto-pairs'
+Plug 'itchyny/lightline.vim'
+Plug 'ConradIrwin/vim-bracketed-paste' " turn on paste mode automatically
+Plug 'haya14busa/vim-poweryank' " enable copy to sys clipboard via OCS52
 call plug#end()
 
 syntax enable
@@ -64,18 +65,25 @@ set breakindent
 set breakindentopt=sbr
 set showbreak=..
 
-if has('unix')
-    if has('mac')
-        set clipboard=unnamed " copy/paste to system clipboard
-    else
-        set clipboard=unnamedplus " copy/paste to system clipboard
-    endif
-endif
+" if has('unix')
+"     if has('mac')
+"         set clipboard=unnamed " copy/paste to system clipboard
+"     else
+"         set clipboard=unnamedplus " copy/paste to system clipboard
+"     endif
+" endif
+
+set clipboard=unnamedplus
 
 " ===== Display ======
 
 if (has("termguicolors"))
     set termguicolors
+endif
+" Fix vim colorscheme in tmux
+if &term =~# '^screen'
+    let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
+    let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
 endif
 silent! colorscheme tender
 let g:airline_theme='tender'
@@ -85,10 +93,12 @@ let g:airline_theme='tender'
 let mapleader = "\<Space>"  " leader is space key
 map <C-n> :NERDTreeToggle<CR>
 
-set pastetoggle=<F2>
-nnoremap <Leader>q :q<CR>
-nnoremap <leader>w :w<CR>
-nnoremap <leader>Q :wqa<CR>
+" Copy to system clipboard through SSH/tmux
+map <Leader>y <Plug>(operator-poweryank-osc52)
+
+" nnoremap <Leader>q :q<CR>
+" nnoremap <leader>w :w<CR>
+" nnoremap <leader>Q :wqa<CR>
 
 " Map tab to % - moves to nearest bracket match
 nnoremap <tab> %
@@ -128,3 +138,13 @@ if executable('rg')
   let g:ctrlp_use_caching = 0
 endif
 
+let g:lightline = {
+      \ 'colorscheme': 'wombat',
+      \ 'active': {
+      \   'left': [ [ 'mode', 'paste' ],
+      \             [ 'gitbranch', 'readonly', 'filename', 'modified' ] ]
+      \ },
+      \ 'component_function': {
+      \   'gitbranch': 'FugitiveHead'
+      \ },
+      \ }
