@@ -11,14 +11,13 @@ Plug 'easymotion/vim-easymotion'
 Plug 'w0rp/ale'
 Plug 'tpope/vim-vinegar'
 Plug 'scrooloose/nerdtree'
-"Plug 'mhartington/oceanic-next'
-"Plug 'rakr/vim-two-firewatch'
-Plug 'jacoborus/tender.vim'
+" Plug 'jacoborus/tender.vim'
+Plug 'sonph/onehalf', {'rtp': 'vim/'}
 Plug 'hashivim/vim-terraform'
 Plug 'svermeulen/vim-cutlass' " prevent copy on delete
 Plug 'itchyny/lightline.vim'
-Plug 'ConradIrwin/vim-bracketed-paste' " turn on paste mode automatically
-Plug 'haya14busa/vim-poweryank' " enable copy to sys clipboard via OCS52
+" Plug 'ConradIrwin/vim-bracketed-paste' " turn on paste mode automatically
+" Plug 'haya14busa/vim-poweryank' " enable copy to sys clipboard via OCS52
 call plug#end()
 
 syntax enable
@@ -59,34 +58,40 @@ set directory=~/.vim/tmp/ " swap files
 set shiftround " when shifting lines, round the indentation to the nearest multiple of shiftwidth.
 set hidden
 set nosmartindent
+" set cursorline
 
 " show line break character
 set breakindent
 set breakindentopt=sbr
 set showbreak=..
 
-" if has('unix')
-"     if has('mac')
-"         set clipboard=unnamed " copy/paste to system clipboard
-"     else
-"         set clipboard=unnamedplus " copy/paste to system clipboard
-"     endif
-" endif
+if has('unix')
+    if has('mac')
+        set clipboard=unnamed " copy/paste to system clipboard
+    else
+        set clipboard=unnamedplus " copy/paste to system clipboard
+    endif
+endif
 
-set clipboard=unnamedplus
+" set clipboard=unnamedplus
 
 " ===== Display ======
 
-if (has("termguicolors"))
-    set termguicolors
+" if (has("termguicolors"))
+"     set termguicolors
+" endif
+if exists('+termguicolors')
+  let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
+  let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
+  set termguicolors
 endif
+set t_Co=256
 " Fix vim colorscheme in tmux
-if &term =~# '^screen'
-    let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
-    let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
-endif
-silent! colorscheme tender
-let g:airline_theme='tender'
+" if &term =~# '^screen'
+"     let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
+"     let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
+" endif
+silent! colorscheme onehalfdark
 
 " ===== Shortcuts =====
 
@@ -139,7 +144,7 @@ if executable('rg')
 endif
 
 let g:lightline = {
-      \ 'colorscheme': 'wombat',
+      \ 'colorscheme': 'onehalfdark',
       \ 'active': {
       \   'left': [ [ 'mode', 'paste' ],
       \             [ 'gitbranch', 'readonly', 'filename', 'modified' ] ]

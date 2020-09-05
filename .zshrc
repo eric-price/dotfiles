@@ -31,4 +31,4 @@ fi
 # Auto completion scripts
 fpath=($fpath ~/.zsh/completion)
 # source <(kubectl completion zsh)
-[[ /usr/local/bin/kubectl ]] && source <(kubectl completion zsh)
+# [[ /usr/local/bin/kubectl ]] && source <(kubectl completion zsh)
