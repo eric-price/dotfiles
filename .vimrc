@@ -12,10 +12,10 @@ Plug 'w0rp/ale'
 Plug 'tpope/vim-vinegar'
 Plug 'scrooloose/nerdtree'
 " Plug 'jacoborus/tender.vim'
-Plug 'sonph/onehalf', {'rtp': 'vim/'}
 Plug 'hashivim/vim-terraform'
 Plug 'svermeulen/vim-cutlass' " prevent copy on delete
 Plug 'itchyny/lightline.vim'
+Plug 'tomasr/molokai'
 " Plug 'ConradIrwin/vim-bracketed-paste' " turn on paste mode automatically
 " Plug 'haya14busa/vim-poweryank' " enable copy to sys clipboard via OCS52
 call plug#end()
@@ -91,7 +91,7 @@ set t_Co=256
 "     let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
 "     let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
 " endif
-silent! colorscheme onehalfdark
+silent! colorscheme molokai
 
 " ===== Shortcuts =====
 
@@ -144,7 +144,7 @@ if executable('rg')
 endif
 
 let g:lightline = {
-      \ 'colorscheme': 'onehalfdark',
+      \ 'colorscheme': 'molokai',
       \ 'active': {
       \   'left': [ [ 'mode', 'paste' ],
       \             [ 'gitbranch', 'readonly', 'filename', 'modified' ] ]
