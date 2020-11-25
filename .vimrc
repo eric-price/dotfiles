@@ -11,22 +11,16 @@ Plug 'easymotion/vim-easymotion'
 Plug 'w0rp/ale'
 Plug 'tpope/vim-vinegar'
 Plug 'scrooloose/nerdtree'
-" Plug 'jacoborus/tender.vim'
 Plug 'hashivim/vim-terraform'
 Plug 'svermeulen/vim-cutlass' " prevent copy on delete
 Plug 'itchyny/lightline.vim'
-Plug 'tomasr/molokai'
-" Plug 'ConradIrwin/vim-bracketed-paste' " turn on paste mode automatically
-" Plug 'haya14busa/vim-poweryank' " enable copy to sys clipboard via OCS52
+" Plug 'tomasr/molokai'
+" Plug 'jacoborus/tender.vim'
+Plug 'srcery-colors/srcery-vim'
 call plug#end()
 
 syntax enable
 filetype plugin indent on
-
-" Create backup directory if it doesn't exist
-if !isdirectory($HOME."/.vim/tmp")
-  call mkdir($HOME."/.vim/tmp", "p")
-endif
 
 set autoindent
 set nocompatible
@@ -53,12 +47,12 @@ set tabstop=4 " number of visual spaces per TAB
 set title " Show the filename in the window titlebar
 set visualbell " Use visual bell instead of audible bell
 set lazyredraw " don’t update screen during macro and script execution
-set backupdir=~/.vim/tmp/ " backup files
-set directory=~/.vim/tmp/ " swap files
 set shiftround " when shifting lines, round the indentation to the nearest multiple of shiftwidth.
-set hidden
+set hidden " hides buffers instead of closing them
 set nosmartindent
-" set cursorline
+set noswapfile
+set nobackup
+set cursorline
 
 " show line break character
 set breakindent
@@ -73,25 +67,19 @@ if has('unix')
     endif
 endif
 
-" set clipboard=unnamedplus
-
 " ===== Display ======
 
 " if (has("termguicolors"))
 "     set termguicolors
 " endif
-if exists('+termguicolors')
-  let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
-  let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
-  set termguicolors
-endif
-set t_Co=256
-" Fix vim colorscheme in tmux
-" if &term =~# '^screen'
-"     let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
-"     let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
+" if exists('+termguicolors')
+"   let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
+"   let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
+"   set termguicolors
 " endif
-silent! colorscheme molokai
+set termguicolors
+set t_Co=256
+colorscheme srcery
 
 " ===== Shortcuts =====
 
@@ -101,6 +89,8 @@ map <C-n> :NERDTreeToggle<CR>
 " Copy to system clipboard through SSH/tmux
 map <Leader>y <Plug>(operator-poweryank-osc52)
 
+:imap jj <Esc>
+
 " nnoremap <Leader>q :q<CR>
 " nnoremap <leader>w :w<CR>
 " nnoremap <leader>Q :wqa<CR>
@@ -109,7 +99,7 @@ map <Leader>y <Plug>(operator-poweryank-osc52)
 nnoremap <tab> %
 vnoremap <tab> %
 
-let g:ackprg = 'rg --vimgrep --no-heading' " Use ripgrep when searching via ack.vim
+let g:ackprg = 'rg --vimgrep --no-heading --smart-case --hidden --no-ignore' " Use ripgrep when searching via ack.vim
 nnoremap <Leader>a :Ack!<space>
 
 " move focus on window panes
@@ -139,12 +129,12 @@ nnoremap <Leader>p :bprev<CR>
 " Use ripgrep when using Ctrl-P
 if executable('rg')
   set grepprg=rg\ --color=never
-  let g:ctrlp_user_command = 'rg %s --files --color=never --glob ""'
+  let g:ctrlp_user_command = 'rg %s --files --color=never --hidden --glob ""'
   let g:ctrlp_use_caching = 0
 endif
 
 let g:lightline = {
-      \ 'colorscheme': 'molokai',
+      \ 'colorscheme': 'srcery',
       \ 'active': {
       \   'left': [ [ 'mode', 'paste' ],
       \             [ 'gitbranch', 'readonly', 'filename', 'modified' ] ]
